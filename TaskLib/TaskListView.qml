@@ -1,5 +1,7 @@
+// TaskListView.qml
+pragma ComponentBehavior: Bound
+
 import QtQuick
-import QtQuick.Controls
 import QtQml.Models
 
 Item {
@@ -10,23 +12,32 @@ Item {
     DelegateModel {
         id: visualModel
         delegate: TaskDelegate {
-            width: root.width
+            width: ListView.view.width
             // Use itemsIndex from DelegateModel for the current visual position
-            property int visualIndex: DelegateModel.itemsIndex
+            visualIndex: DelegateModel.itemsIndex
             
             onMoveItem: (from, to) => {
+                // console.log("DelegateModel.onMoveItem(", from, ", ", to, ") called")
                 visualModel.items.move(from, to)
-                root.moveRequested(from, to)
+                ListView.view.moveRequested(from, to)
             }
         }
     }
 
     ListView {
         id: listView
+
+        signal moveRequested(int from, int to)
+        property bool dragActive: false
+
         anchors.fill: parent
+        interactive: !dragActive
+
         model: visualModel
-        displacementTransition: Transition {
+        displaced: Transition {
             NumberAnimation { properties: "y"; duration: 200; easing.type: Easing.OutQuad }
         }
+
+        onMoveRequested: (from, to) => { root.moveRequested(from, to) }
     }
 }

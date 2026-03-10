@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDebug>
 #include <QObject>
 #include <QString>
 #include <QQmlEngine>
@@ -29,3 +30,6 @@ private:
     QString m_description;
     int m_priority;
 };
+
+QDebug operator<<(QDebug debug, const TaskItem &item);
+QDebug operator<<(QDebug debug, const TaskItem *item);

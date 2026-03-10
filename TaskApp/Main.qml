@@ -1,12 +1,14 @@
 import QtQuick
 import Com.Example.Tasks
-import Com.Example.App
+import QtQuick.Controls.Material
 
 Window {
+    id: rootWindow
     width: 400
     height: 600
     visible: true
     title: "Task Reorderer"
+    Material.theme: Material.Light
 
     TaskBackend {
         id: backend

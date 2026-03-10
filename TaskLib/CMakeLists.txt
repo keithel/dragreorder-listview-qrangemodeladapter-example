@@ -1,4 +1,6 @@
-qt_add_library(TaskLib SHARED)
+cmake_minimum_required(VERSION 3.16)
+find_package(Qt6 REQUIRED COMPONENTS Quick)
+
 qt_add_qml_module(TaskLib
     URI "Com.Example.Tasks"
     VERSION 1.0

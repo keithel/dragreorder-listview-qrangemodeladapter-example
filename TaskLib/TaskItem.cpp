@@ -24,3 +24,24 @@ void TaskItem::setPriority(int priority)
     m_priority = priority;
     emit priorityChanged();
 }
+
+QDebug operator<<(QDebug debug, const TaskItem &item)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "TaskItem("
+                    << item.description() << ", "
+                    << "priority: " << item.priority()
+                    << ")";
+    return debug;
+}
+
+QDebug operator<<(QDebug debug, const TaskItem *item)
+{
+    QDebugStateSaver saver(debug);
+    if (!item) {
+        debug << "TaskItem(nullptr)";
+        return debug;
+    }
+    debug << *item;
+    return debug;
+}
