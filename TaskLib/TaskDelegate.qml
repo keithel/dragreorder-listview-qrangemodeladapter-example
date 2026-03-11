@@ -7,11 +7,14 @@ import QtQuick.Controls
 Item {
     id: delegateRoot
     height: 60
-    
+
     required property var model
     required property int index
     required property int visualIndex
+    required property var listView
+
     signal moveItem(int from, int to)
+    signal commitMove(int from, int to)
 
     Rectangle {
         id: content
@@ -19,7 +22,6 @@ Item {
         height: delegateRoot.height
         parent: delegateRoot
         y: 0
-        z: 1
         color: "white"
         border.color: "#ccc"
 
@@ -30,10 +32,11 @@ Item {
                 parent: content.Window.window.contentItem
             }
             PropertyChanges {
-                target: content
-                y: dragArea.heldY
-                z: 100
-                color: "#eeeeee"
+                content {
+                    y: dragArea.heldY
+                    z: 100
+                    color: "#eeeeee"
+                }
             }
         }
 
@@ -57,11 +60,11 @@ Item {
                     let globalPos = delegateRoot.mapToItem(Window.window.contentItem, 0, 0)
                     heldY = globalPos.y
                     held = true
-                    /*ListView.view*/listView.dragActive = true
+                    delegateRoot.listView.draggingItem = true
                 }
                 onReleased: {
                     held = false
-                    /*ListView.view*/listView.dragActive = false
+                    delegateRoot.listView.draggingItem = false
                 }
                 // onHeldChanged: console.log("Delegate", delegateRoot.index, (held ? "held" : "not held"))
 
@@ -84,20 +87,27 @@ Item {
         Drag.source: delegateRoot
         Drag.hotSpot.x: width / 2
         Drag.hotSpot.y: height / 2
-        Drag.keys: ["task-item"]
+        Drag.keys: [delegateRoot.listView.dragDropKey]
     }
 
     DropArea {
         anchors.fill: parent
-        keys: ["task-item"]
+        keys: [delegateRoot.listView.dragDropKey]
         onEntered: (drag) => {
             let from = drag.source.visualIndex
             let to = delegateRoot.visualIndex
-
+            console.log("DropArea", to, "entered by index", from)
             if (from !== to) {
                 delegateRoot.moveItem(from, to)
             }
         }
+        onDropped: (drop) => {
+            let from = drop.source.visualIndex;
+            let to = delegateRoot.visualIndex;
+            console.log("Dropped", from, "onto", to)
+            if (from !== to) {
+                delegateRoot.commitMove(from, to);
+            }
+        }
     }
-
 }

@@ -17,6 +17,6 @@ Window {
     TaskListView {
         anchors.fill: parent
         model: backend.taskModel
-        onMoveRequested: (from, to) => backend.moveTask(from, to)
+        onCommitMove: (from, to) => backend.moveTask(from, to)
     }
 }

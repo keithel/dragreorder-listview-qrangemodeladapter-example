@@ -32,5 +32,6 @@ QAbstractItemModel* TaskBackend::taskModel() const
 void TaskBackend::moveTask(int from, int to)
 {
     if (from == to) return;
+    qDebug() << "Moving task" << m_data[from]->description() << "at index" << from << "to index" << to;
     m_adapter.moveRows(from, 1, to > from ? to + 1 : to);
 }
