@@ -8,7 +8,8 @@ Item {
     id: delegateRoot
     height: 60
 
-    required property string display
+    required property string description
+    required property int priority
     required property int index
     required property int visualIndex
     required property var listView
@@ -95,7 +96,7 @@ Item {
             anchors.left: handle.right
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            text: delegateRoot.display
+            text: delegateRoot.description + " " + delegateRoot.priority
         }
 
         // 2. Drag/Drop Logic

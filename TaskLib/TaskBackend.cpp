@@ -22,7 +22,7 @@ TaskBackend::TaskBackend(QObject *parent)
     // Initialize with sample data
     , m_adapter(std::ref(s_data))
 {
-    qDebug() << m_adapter.range();
+    m_adapter.model()->setRoleNames(TaskItem::roleNames());
 }
 
 QAbstractItemModel* TaskBackend::taskModel() const

@@ -1,4 +1,5 @@
 #include "TaskItem.h"
+#include <QMetaObject>
 
 TaskItem::TaskItem(const QString &description, int priority, QObject *parent)
     : QObject(parent)
@@ -23,6 +24,18 @@ void TaskItem::setPriority(int priority)
 
     m_priority = priority;
     emit priorityChanged();
+}
+
+QHash<int, QByteArray> TaskItem::roleNames()
+{
+    static const QHash<int, QByteArray> roleNames = []() {
+        QHash<int, QByteArray> roles;
+        const QMetaObject mo = TaskItem::staticMetaObject;
+        for(auto i = 0; i < mo.propertyCount(); i++)
+            roles.insert(i, mo.property(i).name());
+        return roles;
+    }();
+    return roleNames;
 }
 
 QDebug operator<<(QDebug debug, const TaskItem &item)

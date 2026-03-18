@@ -1,9 +1,11 @@
 #pragma once
 
+#include <QByteArray>
 #include <QDebug>
 #include <QObject>
 #include <QString>
 #include <QQmlEngine>
+#include <QRangeModel>
 
 class TaskItem : public QObject {
     Q_OBJECT
@@ -22,6 +24,8 @@ public:
     inline int priority() const { return m_priority; }
     void setPriority(int priority);
 
+    static QHash<int, QByteArray> roleNames();
+
 signals:
     void descriptionChanged();
     void priorityChanged();
@@ -29,6 +33,11 @@ signals:
 private:
     QString m_description;
     int m_priority;
+};
+
+template<> struct QRangeModel::RowOptions<TaskItem>
+{
+    static constexpr auto rowCategory = QRangeModel::RowCategory::MultiRoleItem;
 };
 
 QDebug operator<<(QDebug debug, const TaskItem &item);
